@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2019 the original author or authors.
+ * Copyright 2002-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.springframework.web.filter;
 
 import java.io.IOException;
+
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -144,7 +145,7 @@ public abstract class OncePerRequestFilter extends GenericFilterBean {
 	 * @see WebAsyncManager#hasConcurrentResult()
 	 */
 	protected boolean isAsyncDispatch(HttpServletRequest request) {
-		return WebAsyncUtils.getAsyncManager(request).hasConcurrentResult();
+		return DispatcherType.ASYNC.equals(request.getDispatcherType());
 	}
 
 	/**
@@ -247,7 +248,7 @@ public abstract class OncePerRequestFilter extends GenericFilterBean {
 	protected void doFilterNestedErrorDispatch(HttpServletRequest request, HttpServletResponse response,
 			FilterChain filterChain) throws ServletException, IOException {
 
-		doFilter(request, response, filterChain);
+		filterChain.doFilter(request, response);
 	}
 
 }
